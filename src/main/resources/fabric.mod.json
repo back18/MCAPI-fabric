@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "mcapi",
+  "version": "${version}",
+
+  "name": "MCAPI",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "AGPL-3.0",
+  "icon": "assets/mcapi/icon.png",
+
+  "environment": "*",
+  "entrypoints": {},
+
+    
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+              "fabric": "*",
+          "minecraft": "${minecraft_version}"
+  }
+}
