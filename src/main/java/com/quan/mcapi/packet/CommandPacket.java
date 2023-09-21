@@ -1,7 +1,7 @@
 package com.quan.mcapi.packet;
 
-import com.quan.mcapi.MinecraftApiCommandOutput;
 import com.quan.mcapi.MinecraftApiClient;
+import com.quan.mcapi.MinecraftApiCommandOutput;
 import com.quan.mcapi.PacketType;
 import com.quan.mcapi.StatusCode;
 import net.minecraft.server.MinecraftServer;
@@ -12,7 +12,7 @@ public class CommandPacket implements IRequestPacketHandler
 {
     public static ResponsePacket createResponsePacket(String result, int id)
     {
-        byte[] data = result.getBytes();
+        byte[] data = result.getBytes(StandardCharsets.UTF_8);
         return new ResponsePacket(StatusCode.OK, PacketType.String, data, id);
     }
 

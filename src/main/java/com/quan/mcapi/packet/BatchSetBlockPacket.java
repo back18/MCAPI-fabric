@@ -17,14 +17,14 @@ public class BatchSetBlockPacket implements IRequestPacketHandler
 {
     public static ResponsePacket createResponsePacket(int totalCount, int completedCount, int id)
     {
-        byte[] data = new BatchSetBlockPacket.ResponseData(totalCount, completedCount).serialize();
+        byte[] data = new ResponseData(totalCount, completedCount).serialize();
         return new ResponsePacket(StatusCode.OK, PacketType.BSON, data, id);
     }
 
     public static List<SetBlockArgument> parseRequestPacket(RequestPacket requestPacket)
     {
         byte[] data = requestPacket.getData();
-        return new BatchSetBlockPacket.RequestData(data).toSetBlockArguments();
+        return new RequestData(data).toSetBlockArguments();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BatchSetBlockPacket implements IRequestPacketHandler
         {
             List<SetBlockArgument> result = new ArrayList<>();
             for (int i = 0; i + 3 < data.length; i += 4)
-                result.add(new SetBlockArgument(new BlockPos(data[i], data[i + 1], data[i + 2]), palette[i + 3]));
+                result.add(new SetBlockArgument(new BlockPos(data[i], data[i + 1], data[i + 2]), palette[data[i + 3]]));
             return result;
         }
     }

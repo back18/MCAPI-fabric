@@ -1,5 +1,6 @@
 package com.quan.mcapi.client;
 
+import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
 
 public class MCAPIClient implements ClientModInitializer
@@ -10,6 +11,6 @@ public class MCAPIClient implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-
+        LogUtils.getLogger().info("客户端初始化");
     }
 }

@@ -1,6 +1,5 @@
 package com.quan.mcapi.packet;
 
-import com.ibm.icu.impl.InvalidFormatException;
 import com.quan.mcapi.BsonDocumentUtil;
 import com.quan.mcapi.ISerializable;
 import com.quan.mcapi.PacketType;
@@ -8,8 +7,6 @@ import com.quan.mcapi.StatusCode;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
-
-import java.nio.ByteBuffer;
 
 public class ResponsePacket extends DataPacket
 {
@@ -52,7 +49,7 @@ public class ResponsePacket extends DataPacket
 
     private static ResponsePacket fromError(StatusCode statusCode, String errorType, String errorMessage, int id)
     {
-        byte[] data = new ResponsePacket.ErrorResponseData(errorType, errorMessage).serialize();
+        byte[] data = new ErrorResponseData(errorType, errorMessage).serialize();
         return new ResponsePacket(statusCode, PacketType.BSON, data, id);
     }
 

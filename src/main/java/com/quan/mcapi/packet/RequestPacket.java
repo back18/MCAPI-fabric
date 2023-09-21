@@ -1,12 +1,9 @@
 package com.quan.mcapi.packet;
 
-import com.ibm.icu.impl.InvalidFormatException;
 import com.quan.mcapi.BsonDocumentUtil;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
-
-import java.nio.ByteBuffer;
 
 public class RequestPacket extends DataPacket
 {

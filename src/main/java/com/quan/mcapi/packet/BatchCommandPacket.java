@@ -10,14 +10,14 @@ public class BatchCommandPacket implements IRequestPacketHandler
 {
     public static ResponsePacket createResponsePacket(String[] results, int id)
     {
-        byte[] data = new BatchCommandPacket.ResponseData(results).serialize();
+        byte[] data = new ResponseData(results).serialize();
         return new ResponsePacket(StatusCode.OK, PacketType.BSON, data, id);
     }
 
     public static String[] ParseRequestPacket(RequestPacket requestPacket)
     {
         byte[] data = requestPacket.getData();
-        return new BatchCommandPacket.RequestData(data).commands;
+        return new RequestData(data).commands;
     }
 
     @Override

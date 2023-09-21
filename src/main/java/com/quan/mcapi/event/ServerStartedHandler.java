@@ -10,7 +10,7 @@ public class ServerStartedHandler implements ServerLifecycleEvents.ServerStarted
     @Override
     public void onServerStarted(MinecraftServer server)
     {
-        MCAPI.listener = MinecraftApiListener.create(server, 25595, "123456");
+        MCAPI.listener = MinecraftApiListener.create(server, 25585, "123456");
         MCAPI.listener.start();
     }
 }

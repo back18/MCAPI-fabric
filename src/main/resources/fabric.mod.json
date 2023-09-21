@@ -2,22 +2,26 @@
   "schemaVersion": 1,
   "id": "mcapi",
   "version": "${version}",
-
   "name": "MCAPI",
   "description": "",
   "authors": [],
-  "contact": {},
-
+  "contact": {
+    "repo": "https://github.com/back18/MCAPI-fabric"
+  },
   "license": "AGPL-3.0",
   "icon": "assets/mcapi/icon.png",
-
   "environment": "*",
-  "entrypoints": {},
-
-    
+  "entrypoints": {
+    "client": [
+      "com.quan.mcapi.client.MCAPIClient"
+    ],
+    "main": [
+      "com.quan.mcapi.MCAPI"
+    ]
+  },
   "depends": {
     "fabricloader": ">=${loader_version}",
-              "fabric": "*",
-          "minecraft": "${minecraft_version}"
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
   }
 }

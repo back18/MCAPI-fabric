@@ -1,14 +1,11 @@
 package com.quan.mcapi.packet;
 
-import com.ibm.icu.impl.InvalidFormatException;
-import com.quan.mcapi.BsonDocumentUtil;
 import com.quan.mcapi.ISerializable;
-import org.bson.*;
+import org.bson.BsonBinary;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
 import org.bson.codecs.BsonDocumentCodec;
-import org.bson.codecs.EncoderContext;
-import org.bson.io.BasicOutputBuffer;
-
-import java.nio.ByteBuffer;
 
 public abstract class DataPacket implements ISerializable
 {

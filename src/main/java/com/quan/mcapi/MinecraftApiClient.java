@@ -8,10 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import org.bson.BsonDocument;
 import org.slf4j.Logger;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -41,21 +38,24 @@ public class MinecraftApiClient extends MinecraftApiBase
             int total = buffer.length;
             int current = 0;
             boolean initial = true;
-            socket.setSoTimeout(0);
+            //socket.setSoTimeout(0);
 
             while (running)
             {
                 int length = stream.read(buffer, 0, Math.min(total - current, buffer.length));
 
-                LOGGER.info("expected length: {}, read length: {},", Math.min(total - current, buffer.length), length);
+                //LOGGER.info("expected length: {}, read length: {},", Math.min(total - current, buffer.length), length);
 
                 if (length < 0)
-                    continue;
+                {
+                    running = false;
+                    break;
+                }
 
                 current += length;
                 if (initial)
                 {
-                    socket.setSoTimeout(30 * 1000);
+                    //socket.setSoTimeout(30 * 1000);
 
                     if (current < 4)
                         continue;
@@ -79,7 +79,7 @@ public class MinecraftApiClient extends MinecraftApiBase
                 total = buffer.length;
                 current = 0;
                 initial = true;
-                socket.setSoTimeout(0);
+                //socket.setSoTimeout(0);
             }
         }
         catch (IOException ioException)

@@ -12,7 +12,7 @@ public class LoginPacket implements IRequestPacketHandler
 {
     public static ResponsePacket createResponsePacket(boolean isSuccessful, String message, int id)
     {
-        byte[] data = new LoginPacket.ResponseData(isSuccessful, message).serialize();
+        byte[] data = new ResponseData(isSuccessful, message).serialize();
         return new ResponsePacket(StatusCode.OK, PacketType.String, data, id);
     }
 
