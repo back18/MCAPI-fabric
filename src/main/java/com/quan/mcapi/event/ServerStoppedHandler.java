@@ -9,6 +9,7 @@ public class ServerStoppedHandler implements ServerLifecycleEvents.ServerStopped
     @Override
     public void onServerStopped(MinecraftServer server)
     {
-        MCAPI.listener.stop();
+        if (MCAPI.listener != null)
+            MCAPI.listener.stop();
     }
 }

@@ -8,27 +8,29 @@ import net.minecraft.server.MinecraftServer;
 import org.bson.BsonDocument;
 import org.slf4j.Logger;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-public class MinecraftApiClient extends MinecraftApiBase
+public class McapiClient extends McapiBase
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final Socket socket;
     private final DataPacketManager dataPacketManager;
     private boolean authenticated;
 
-    public MinecraftApiClient(MinecraftServer server, String password, Socket socket)
+    public McapiClient(MinecraftServer server, String password, Socket socket)
     {
-        super(server, password, "MCAPI Client " + socket.getInetAddress());
-
+        super(server, password);
         this.socket = socket;
         dataPacketManager = new DataPacketManager();
     }
 
     @Override
-    public void run()
+    protected void run()
     {
         try
         {
@@ -38,9 +40,9 @@ public class MinecraftApiClient extends MinecraftApiBase
             int total = buffer.length;
             int current = 0;
             boolean initial = true;
-            //socket.setSoTimeout(0);
+            socket.setSoTimeout(0);
 
-            while (running)
+            while (isRunning)
             {
                 int length = stream.read(buffer, 0, Math.min(total - current, buffer.length));
 
@@ -48,14 +50,14 @@ public class MinecraftApiClient extends MinecraftApiBase
 
                 if (length < 0)
                 {
-                    running = false;
+                    isRunning = false;
                     break;
                 }
 
                 current += length;
                 if (initial)
                 {
-                    //socket.setSoTimeout(30 * 1000);
+                    socket.setSoTimeout(30 * 1000);
 
                     if (current < 4)
                         continue;
@@ -79,33 +81,27 @@ public class MinecraftApiClient extends MinecraftApiBase
                 total = buffer.length;
                 current = 0;
                 initial = true;
-                //socket.setSoTimeout(0);
+                socket.setSoTimeout(0);
             }
         }
         catch (IOException ioException)
         {
-            running = false;
+            isRunning = false;
             LOGGER.error("MCAPI Client io exception", ioException);
         }
     }
 
     @Override
-    public synchronized void stop()
+    protected void closeUnmanaged()
     {
-        running = false;
-        close();
-        super.stop();
-    }
-
-    private void close()
-    {
+        LOGGER.debug("closeSocket: {}", socket);
         try
         {
             socket.close();
         }
-        catch (IOException ioException)
+        catch (IOException ex)
         {
-            LOGGER.warn("Failed to close socket", ioException);
+            LOGGER.warn("Failed to close socket", ex);
         }
     }
 

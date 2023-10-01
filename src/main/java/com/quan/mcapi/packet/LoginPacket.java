@@ -23,10 +23,10 @@ public class LoginPacket implements IRequestPacketHandler
     }
 
     @Override
-    public ResponsePacket HandleRequestPacket(MinecraftServer server, MinecraftApiClient apiClient, RequestPacket requestPacket)
+    public ResponsePacket HandleRequestPacket(MinecraftServer server, McapiClient mcapiClient, RequestPacket requestPacket)
     {
         String password = ParseRequestPacket(requestPacket);
-        if (apiClient.validatePassword(password))
+        if (mcapiClient.validatePassword(password))
         {
             return createResponsePacket(true, "Login is successful", requestPacket.getID());
         }

@@ -21,7 +21,7 @@ public class BatchCommandPacket implements IRequestPacketHandler
     }
 
     @Override
-    public ResponsePacket HandleRequestPacket(MinecraftServer server, MinecraftApiClient apiClient, RequestPacket requestPacket)
+    public ResponsePacket HandleRequestPacket(MinecraftServer server, McapiClient mcapiClient, RequestPacket requestPacket)
     {
         MinecraftApiCommandOutput commandOutput = MinecraftApiCommandOutput.DEFAULT_COMMAND_OUTPUT;
         String[] commands = ParseRequestPacket(requestPacket);

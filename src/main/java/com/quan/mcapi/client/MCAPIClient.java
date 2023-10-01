@@ -11,6 +11,6 @@ public class MCAPIClient implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LogUtils.getLogger().info("客户端初始化");
+
     }
 }

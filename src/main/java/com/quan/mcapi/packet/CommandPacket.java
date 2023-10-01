@@ -1,9 +1,6 @@
 package com.quan.mcapi.packet;
 
-import com.quan.mcapi.MinecraftApiClient;
-import com.quan.mcapi.MinecraftApiCommandOutput;
-import com.quan.mcapi.PacketType;
-import com.quan.mcapi.StatusCode;
+import com.quan.mcapi.*;
 import net.minecraft.server.MinecraftServer;
 
 import java.nio.charset.StandardCharsets;
@@ -23,7 +20,7 @@ public class CommandPacket implements IRequestPacketHandler
     }
 
     @Override
-    public ResponsePacket HandleRequestPacket(MinecraftServer server, MinecraftApiClient apiClient, RequestPacket requestPacket)
+    public ResponsePacket HandleRequestPacket(MinecraftServer server, McapiClient mcapiClient, RequestPacket requestPacket)
     {
         String command = ParseRequestPacket(requestPacket);
         MinecraftApiCommandOutput commandOutput = MinecraftApiCommandOutput.DEFAULT_COMMAND_OUTPUT;

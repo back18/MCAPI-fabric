@@ -1,6 +1,6 @@
 package com.quan.mcapi.packet;
 
-import com.quan.mcapi.MinecraftApiClient;
+import com.quan.mcapi.McapiClient;
 import com.quan.mcapi.PacketType;
 import com.quan.mcapi.StatusCode;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +13,7 @@ public class EmptyPacket implements IRequestPacketHandler
     }
 
     @Override
-    public ResponsePacket HandleRequestPacket(MinecraftServer server, MinecraftApiClient apiClient, RequestPacket requestPacket)
+    public ResponsePacket HandleRequestPacket(MinecraftServer server, McapiClient mcapiClient, RequestPacket requestPacket)
     {
         return createResponsePacket(requestPacket.getID());
     }
