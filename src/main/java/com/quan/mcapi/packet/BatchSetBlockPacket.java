@@ -12,6 +12,7 @@ import org.bson.BsonInt32;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BatchSetBlockPacket implements IRequestPacketHandler
 {
@@ -30,10 +31,11 @@ public class BatchSetBlockPacket implements IRequestPacketHandler
     @Override
     public ResponsePacket HandleRequestPacket(MinecraftServer server, McapiClient mcapiClient, RequestPacket requestPacket)
     {
-        List<SetBlockArgument> arguments = parseRequestPacket(requestPacket);
         ServerWorld world = server.getOverworld();
-        int count = MinecraftUtil.batchSetBlock(world, arguments);
-        return createResponsePacket(arguments.size(), count, requestPacket.getID());
+        List<SetBlockArgument> arguments = parseRequestPacket(requestPacket);
+        AtomicInteger count = new AtomicInteger();
+        server.submitAndJoin(() -> count.set(MinecraftUtil.batchSetBlock(world, arguments)));
+        return createResponsePacket(arguments.size(), count.get(), requestPacket.getID());
     }
 
     public static class RequestData

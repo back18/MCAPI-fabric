@@ -4,7 +4,7 @@ public abstract class UnmanagedRunnable extends RunnableBase implements AutoClos
 {
     protected UnmanagedRunnable()
     {
-        isClosed =false;
+        isClosed = false;
     }
 
     protected boolean isClosed;
@@ -39,6 +39,6 @@ public abstract class UnmanagedRunnable extends RunnableBase implements AutoClos
             return;
 
         closeUnmanaged();
-        isClosed =true;
+        isClosed = true;
     }
 }

@@ -102,9 +102,7 @@ public class McapiListener extends McapiBase
         {
             ServerSocket serverSocket = new ServerSocket(port, 0, InetAddress.getByName(address));
             serverSocket.setSoTimeout(500);
-            McapiListener listener = new McapiListener(server, password, serverSocket);
-            listener.start();
-            return listener;
+            return new McapiListener(server, password, serverSocket);
         }
         catch (IOException ex)
         {
