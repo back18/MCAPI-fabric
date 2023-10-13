@@ -49,7 +49,7 @@ public class McapiListener extends McapiBase
             {
                 if (this.isRunning)
                 {
-                    LOGGER.error("MCAPI Listener io exception", ioException);
+                    LOGGER.error("McapiListener io exception", ioException);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class McapiListener extends McapiBase
         for (McapiClient client : clients)
             client.stop();
 
-        LOGGER.debug("closeSocket: {}", listener);
+        LOGGER.debug("Close socket: {}", listener);
         try
         {
             listener.close();

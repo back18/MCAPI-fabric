@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 
 public class McapiClient extends McapiBase
@@ -32,30 +33,28 @@ public class McapiClient extends McapiBase
     @Override
     protected void run()
     {
+        ByteArrayOutputStream cache = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int total = 0;
+        int current = 0;
+
         try
         {
             InputStream stream = socket.getInputStream();
-            byte[] buffer = new byte[4096];
-            ByteArrayOutputStream cache = new ByteArrayOutputStream();
-            int total = buffer.length;
-            int current = 0;
-            boolean initial = true;
             socket.setSoTimeout(0);
 
             while (isRunning)
             {
-                int length = stream.read(buffer, 0, Math.min(total - current, buffer.length));
-
-                //LOGGER.info("expected length: {}, read length: {},", Math.min(total - current, buffer.length), length);
-
-                if (length < 0)
+                int length = total == 0 ? 4 : Math.min(total - current, buffer.length);
+                int readLength = stream.read(buffer, 0, length);
+                if (readLength < 0)
                 {
                     isRunning = false;
                     break;
                 }
 
-                current += length;
-                if (initial)
+                current += readLength;
+                if (total == 0)
                 {
                     socket.setSoTimeout(30 * 1000);
 
@@ -65,12 +64,12 @@ public class McapiClient extends McapiBase
                     total = ByteBuffer.wrap(new byte[] { buffer[3], buffer[2], buffer[1], buffer[0] }).getInt();
 
                     if (total < 4)
-                        throw new IOException("Error reading packet: Packet length identifier cannot be less than 4");
-
-                    initial = false;
+                        throw new IOException(String.format("Packet length %s is less than the minimum length of 4", total));
                 }
 
-                cache.write(buffer, 0, length);
+                cache.write(buffer, 0, readLength);
+
+                //LOGGER.info("Total length {}, read length {}", total, current);
 
                 if (current < total)
                     continue;
@@ -78,23 +77,27 @@ public class McapiClient extends McapiBase
                 handleDataPacket(cache.toByteArray());
 
                 cache.reset();
-                total = buffer.length;
+                total = 0;
                 current = 0;
-                initial = true;
                 socket.setSoTimeout(0);
             }
+        }
+        catch (SocketTimeoutException socketTimeoutException)
+        {
+            isRunning = false;
+            LOGGER.error("McapiClient request timeout, expected to read {} bytes, actual read {} bytes", total, current, socketTimeoutException);
         }
         catch (IOException ioException)
         {
             isRunning = false;
-            LOGGER.error("MCAPI Client io exception", ioException);
+            LOGGER.error("McapiClient io exception", ioException);
         }
     }
 
     @Override
     protected void closeUnmanaged()
     {
-        LOGGER.debug("closeSocket: {}", socket);
+        LOGGER.debug("Close socket: {}", socket);
         try
         {
             socket.close();
@@ -105,12 +108,11 @@ public class McapiClient extends McapiBase
         }
     }
 
-    public void sendResponsePacket(ResponsePacket responsePacket) throws IOException
+    public void sendResponsePacket(ResponsePacket response) throws IOException
     {
-        byte[] bytes = responsePacket.serialize();
+        byte[] bytes = response.serialize();
         OutputStream stream = socket.getOutputStream();
         stream.write(bytes);
-        stream.flush();
     }
 
     public void handleDataPacket(byte[] bytes) throws IOException
@@ -123,7 +125,7 @@ public class McapiClient extends McapiBase
         }
         catch (Exception ex)
         {
-            LOGGER.error("MCAPI unable to parse request", ex);
+            LOGGER.error("McapiClient unable to parse request", ex);
             return;
         }
 
